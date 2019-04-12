@@ -7,7 +7,7 @@ use v5.26;
 use Storable;
 use IPC::Open3;
 
-my $hlog_file = $ENV{HLOG} // "$ENV{HOME}.hlog";
+my $hlog_file = $ENV{HLOG} // "$ENV{HOME}/.hlog";
 store {}, $hlog_file if (not -e $hlog_file);
 my $hlog = retrieve $hlog_file;
 

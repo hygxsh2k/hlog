@@ -6,7 +6,7 @@ use autodie;
 use v5.26;
 use Storable;
 
-my $hlog_file = $ENV{HLOG} // "$ENV{HOME}.hlog";
+my $hlog_file = $ENV{HLOG} // "$ENV{HOME}/.hlog";
 store {}, $hlog_file if (not -e $hlog_file);
 my $hlog = retrieve $hlog_file;
 
