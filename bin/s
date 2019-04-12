@@ -12,10 +12,9 @@ my $hlog_file = $ENV{HLOG} // "$ENV{HOME}/.hlog";
 store {}, $hlog_file if (not -e $hlog_file);
 my $hlog = retrieve $hlog_file;
 
-my ($wtr, $rdr, $err);
+my $rdr;
 my $cmd = join ' ', @ARGV;
-my $pid = open3($wtr, $rdr, $err, $cmd);
-close $wtr;
+my $pid = open3(\*STDIN, $rdr, $rdr, $cmd);
 
 waitpid $pid, 0;
 my $cmd_out = '';
