@@ -12,6 +12,7 @@ store {}, $hlog_file if (not -e $hlog_file);
 my $hlog = retrieve $hlog_file;
 
 my $cmd = join ' ', @ARGV;
+$cmd = $hlog->{'$_'} if ($cmd eq '');
 if (defined $hlog->{$cmd}->[2]) {
 	my ($fh_a, $filename_a) = tempfile( UNLINK => 1 );
 	print $fh_a $hlog->{$cmd}->[2];

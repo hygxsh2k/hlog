@@ -6,6 +6,7 @@ use autodie;
 use v5.26;
 use Storable;
 use IPC::Open3;
+use IO::Compress::Gzip;
 
 my $hlog_file = $ENV{HLOG} // "$ENV{HOME}/.hlog";
 store {}, $hlog_file if (not -e $hlog_file);
@@ -26,5 +27,7 @@ close $rdr;
 
 unshift @{$hlog->{$cmd}}, $cmd_out;
 splice  @{$hlog->{$cmd}}, 3;
+
+$hlog->{'$_'} = $cmd;
 
 store $hlog, $hlog_file;

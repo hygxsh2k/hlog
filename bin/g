@@ -11,6 +11,8 @@ store {}, $hlog_file if (not -e $hlog_file);
 my $hlog = retrieve $hlog_file;
 
 my $cmd = join ' ', @ARGV;
+$cmd = $hlog->{'$_'} if ($cmd eq '');
+
 if (defined $hlog->{$cmd}->[0]) {
 	print $hlog->{$cmd}->[0];
 } else {
