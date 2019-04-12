@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use autodie;
+use v5.26;
+use Storable;
+use File::Temp qw/ tempfile /;
+
+my $hlog_file = $ENV{HLOG} // "$ENV{HOME}.hlog";
+store {}, $hlog_file if (not -e $hlog_file);
+my $hlog = retrieve $hlog_file;
+
+my $cmd = join ' ', @ARGV;
+if (defined $hlog->{$cmd}->[2]) {
+	my ($fh_a, $filename_a) = tempfile( UNLINK => 1 );
+	print $fh_a $hlog->{$cmd}->[2];
+	close $fh_a;
+	my ($fh_b, $filename_b) = tempfile( UNLINK => 1 );
+	print $fh_b $hlog->{$cmd}->[1];
+	close $fh_b;
+	my ($fh_c, $filename_c) = tempfile( UNLINK => 1 );
+	print $fh_c $hlog->{$cmd}->[0];
+	close $fh_c;
+	my ($fh_ab, $filename_ab) = tempfile( UNLINK => 1);
+	print $fh_ab `diff -u $filename_a $filename_b | tail -n+3`;
+	close $fh_ab;
+	my ($fh_bc, $filename_bc) = tempfile( UNLINK => 1);
+	print $fh_bc `diff -u $filename_b $filename_c | tail -n+3`;
+	close $fh_bc;
+	print `diff -u $filename_ab $filename_bc | tail -n+3`;
+} else {
+	die "[HLOG] need to execute it more than three times: '$cmd'";
+}
