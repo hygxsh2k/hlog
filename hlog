@@ -2,11 +2,9 @@
 
 use strict;
 use warnings;
-use autodie;
-use v5.26;
+use v5.16;
 use Storable;
 use IPC::Open3;
-use IO::Compress::Gzip;
 use File::Temp qw/ tempfile /;
 use Getopt::Long qw/ :config posix_default no_ignore_case gnu_compat /;
 
@@ -14,7 +12,10 @@ my %opts = ();
 GetOptions(\%opts, 'store|s', 'get|g', 'diff|d', 'diff2|2', 'help|h');
 
 my $hlog_file = $ENV{HLOG} // "$ENV{HOME}/.hlog";
-store {}, $hlog_file if (not -e $hlog_file);
+if (not -e $hlog_file) {
+	store {}, $hlog_file; 
+	chmod 0600, $hlog_file ;
+}
 my $hlog = retrieve $hlog_file;
 
 my $cmd = join ' ', @ARGV;
