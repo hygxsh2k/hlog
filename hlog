@@ -27,7 +27,7 @@ if ($opts{get}) {
 	if (defined $hlog->{$cmd}->[0]) {
 	        print $hlog->{$cmd}->[0];
 	} else {
-	        die "[HLOG] not registered command: '$cmd'";
+	        die "[HLOG] not stored command: '$cmd'";
 	}
 	
 } elsif ($opts{diff}) {
@@ -42,7 +42,7 @@ if ($opts{get}) {
 	        close $fh_b;
 	        print `diff -u --label a --label b $filename_a $filename_b`;
 	} else {
-	        die "[HLOG] need to execute it more than twice: '$cmd'";
+	        die "[HLOG] need to store at least twice: '$cmd'";
 	}
 
 } elsif ($opts{diff2}) {
@@ -66,12 +66,12 @@ if ($opts{get}) {
 	        print `diff -u $filename_ab $filename_bc | tail -n+3`;
 	
 	} else {
-	        die "[HLOG] need to execute it more than three times: '$cmd'";
+	        die "[HLOG] need to store at least three times: '$cmd'";
 	}
 
 } elsif ($opts{help} or "$cmd" eq '') { 
 
-	die "usage: hlog [-s|--store] [-g|--get] [-d|--diff] [-2|--diff2] [-h|--help] COMMAND";
+	say STDERR "usage: hlog [-s|--store] [-g|--get] [-d|--diff] [-2|--diff2] [-h|--help] [CMD]";
 
 } else {
 	# Execute specified command and Store its result
